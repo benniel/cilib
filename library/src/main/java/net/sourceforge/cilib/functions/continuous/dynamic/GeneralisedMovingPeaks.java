@@ -12,6 +12,7 @@ import net.sourceforge.cilib.functions.DynamicFunction;
 import net.sourceforge.cilib.math.random.GaussianDistribution;
 import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;
 import net.sourceforge.cilib.math.random.UniformDistribution;
+import net.sourceforge.cilib.math.random.generator.Rand;
 import net.sourceforge.cilib.type.types.Bounds;
 import net.sourceforge.cilib.type.types.container.Vector;
 
@@ -45,6 +46,7 @@ public class GeneralisedMovingPeaks implements ContinuousFunction, DynamicFuncti
     private double minHeight, maxHeight, minWidth, maxWidth; //minimum and maximum values for peak heights and widths.
     private Vector[] peakPositions, shiftVectors; //the positions of all peaks, as well as the previous shift vectors.
     private int[][] movementDirections; //the movement directions of peaks in each dimension.
+    private double X1, X2, Y1, Y2;
 
     public GeneralisedMovingPeaks() {
         this.gaussian = new GaussianDistribution();
@@ -82,7 +84,8 @@ public class GeneralisedMovingPeaks implements ContinuousFunction, DynamicFuncti
     public Double apply(Vector input) {
         //this is silly, but there's no way of knowing the dimensions of the problem until this method is called...
         if (movementDirections == null) {
-            initialisePeaks(input.size());
+            //initialisePeaks(input.size());
+            initialiseCustomPeaks(input.size());
         }
 
         //evaluate function
@@ -212,6 +215,47 @@ public class GeneralisedMovingPeaks implements ContinuousFunction, DynamicFuncti
             shiftVectors[p] = Vector.of(oneVector);
         }
     }
+    
+    private void initialiseCustomPeaks(int dimensions) {
+        movementDirections = new int[peaks][dimensions];
+        peakHeigths = new double[peaks];
+        peakWidths = new double[peaks];
+        peakPositions = new Vector[peaks];
+        shiftVectors = new Vector[peaks];
+
+        //get problem domain boundaries
+        Vector bounds = (Vector) AbstractAlgorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation();
+
+        double upper = bounds.boundsOf(0).getUpperBound();
+        double lower = bounds.boundsOf(0).getLowerBound();
+
+        Double[] oneVector = new Double[dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            oneVector[i] = 1.0;
+        }  // } What happened to Vector.fill?
+
+        //initialise peaks and shift vectors
+        Double[] position = new Double[dimensions];
+        
+        for (int p = 0; p < peaks; p++) {
+            if (p == 0) {
+                position[0] = X1;
+                position[1] = Y1;
+            } else if (p == 1) {
+                position[0] = X2;
+                position[1] = Y2;
+            }
+            for (int i = 0; i < dimensions; i++) {
+                movementDirections[p][i] = 1;
+            }
+
+            peakPositions[p] = Vector.of(position);
+            peakHeigths[p] = uniform.getRandomNumber(minHeight, maxHeight);
+            peakWidths[p] = uniform.getRandomNumber(minWidth, maxWidth);
+
+            shiftVectors[p] = Vector.of(oneVector);
+        }
+    }
 
     /**
      * The movements of peaks are controlled by the shift vectors. The
@@ -249,6 +293,11 @@ public class GeneralisedMovingPeaks implements ContinuousFunction, DynamicFuncti
         }
 
         return max;
+    }
+    
+    @Override
+    public Vector getOptimumPosition() {
+        return peakPositions[0];
     }
 
     // Getters and setters.... for use in the XML
@@ -330,5 +379,25 @@ public class GeneralisedMovingPeaks implements ContinuousFunction, DynamicFuncti
 
     public void setWidthSeverity(double widthSeverity) {
         this.widthSeverity = widthSeverity;
+    }
+    
+    public void setSeed(long seed) {
+        Rand.setSeed(seed);
+    }
+
+    public void setX1(double X1) {
+        this.X1 = X1;
+    }
+
+    public void setX2(double X2) {
+        this.X2 = X2;
+    }
+
+    public void setY1(double Y1) {
+        this.Y1 = Y1;
+    }
+
+    public void setY2(double Y2) {
+        this.Y2 = Y2;
     }
 }

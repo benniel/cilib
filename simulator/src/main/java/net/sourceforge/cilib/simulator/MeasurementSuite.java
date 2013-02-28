@@ -114,7 +114,7 @@ public class MeasurementSuite {
             tmp[index++] = value;
         }
         StringBuilder builder = new StringBuilder();
-        builder.append(algorithm.getIterations());
+        builder.append("~" + algorithm.getIterations() + "~");
         for (Type t : tmp) {
             builder.append(" ").append(t);
         }

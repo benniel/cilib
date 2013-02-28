@@ -9,6 +9,6 @@ package net.sourceforge.cilib.functions;
 public interface DynamicFunction<F, T> extends Function<F, T> {
 
     T getOptimum();
-
+    F getOptimumPosition();
     void changeEnvironment();
 }

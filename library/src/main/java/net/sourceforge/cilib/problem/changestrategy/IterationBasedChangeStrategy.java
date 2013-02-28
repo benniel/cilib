@@ -47,4 +47,8 @@ public class IterationBasedChangeStrategy implements ChangeStrategy {
         return false;
     }
 
+    public void setResolution(int resolution) {
+        this.resolution = ConstantControlParameter.of(resolution);
+    }
+
 }

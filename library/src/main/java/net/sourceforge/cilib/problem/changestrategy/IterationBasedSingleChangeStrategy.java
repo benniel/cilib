@@ -21,6 +21,9 @@ public class IterationBasedSingleChangeStrategy implements ChangeStrategy {
     private ControlParameter resolution;
     private int changeCounter=0;
 
+    public IterationBasedSingleChangeStrategy() {
+    }
+
     public IterationBasedSingleChangeStrategy(int numberOfIterationBetweenChanges) {
         this.resolution = ConstantControlParameter.of(numberOfIterationBetweenChanges);
     }
@@ -36,4 +39,8 @@ public class IterationBasedSingleChangeStrategy implements ChangeStrategy {
         return false;
     }
 
+    public void setResolution(int resolution) {
+        this.resolution = ConstantControlParameter.of(resolution);
+    }
+    
 }

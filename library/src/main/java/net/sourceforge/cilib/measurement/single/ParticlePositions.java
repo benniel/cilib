@@ -8,8 +8,10 @@ package net.sourceforge.cilib.measurement.single;
 
 import java.util.Iterator;
 import net.sourceforge.cilib.algorithm.Algorithm;
+import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.measurement.Measurement;
 import net.sourceforge.cilib.pso.PSO;
+import net.sourceforge.cilib.pso.dynamic.ChargedParticle;
 import net.sourceforge.cilib.pso.particle.Particle;
 import net.sourceforge.cilib.type.types.StringType;
 import net.sourceforge.cilib.type.types.container.Vector;
@@ -37,20 +39,31 @@ public class ParticlePositions implements Measurement<StringType> {
         PSO pso = (PSO) algorithm;
         //Iterator i = pso.getTopology().particles();
         Iterator<Particle> i = pso.getTopology().iterator();
+        int count = 1;
         while (i.hasNext()) {
             Particle particle = i.next();
-            tmp.append("\nParticle: ");
+            //tmp.append(((ChargedParticle)particle).getCharge());
+            /*tmp.append("\nParticle: ");
             tmp.append(" Current Fitness: ");
             tmp.append(particle.getFitness().getValue());
             tmp.append(" Best Fitness: ");
             tmp.append(particle.getBestFitness().getValue());
-            tmp.append(" Position: ");
+            tmp.append(" Position: ");*/
 
+            tmp.append("\n");
             Vector v = (Vector) particle.getPosition();
             for (int j = 0; j < particle.getDimension(); ++j) {
                 tmp.append(v.doubleValueOf(j));
-                tmp.append(" ");
+                tmp.append("\t");
             }
+            int color = 0;
+            if (((ChargedParticle)particle).getCharge() > 0) {
+                color = 1;
+            }
+            
+            tmp.append(color);
+            tmp.append("\t");
+            tmp.append(count++);
         }
 
         return new StringType(tmp.toString());
