@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE simulator [
+<!ATTLIST algorithm id ID #IMPLIED>
+<!ATTLIST problem id ID #IMPLIED>
+<!ATTLIST measurements id ID #IMPLIED>
+]>
+<simulator>
+    <algorithms>
+        <algorithm id="pso" class="pso.PSO">
+            <initialisationStrategy class="algorithm.initialisation.ClonedPopulationInitialisationStrategy">
+                <entityType class="pso.particle.StandardParticle">
+                    <velocityProvider class="pso.velocityprovider.StandardVelocityProvider">
+                        <inertiaWeight class="tuning.TuningControlParameter" index="0"/>
+                        <cognitiveAcceleration class="tuning.TuningControlParameter" index="1"/>
+                        <socialAcceleration class="tuning.TuningControlParameter" index="2"/>
+                    </velocityProvider>
+                </entityType>
+            </initialisationStrategy>
+            <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="100"/>
+        </algorithm>
+
+        <algorithm id="frace" class="tuning.TuningAlgorithm">
+            <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="100"/>
+
+            <iterationStrategy class="tuning.IFRaceIterationStrategy">
+                <iterationStrategy class="tuning.FRaceIterationStrategy">
+                    <minProblems class="controlparameter.ConstantControlParameter" parameter="1"/>
+                    <minSolutions class="controlparameter.ConstantControlParameter" parameter="2"/>
+                </iterationStrategy>
+
+                <parameterChangeTrigger class="tuning.parameterchange.triggers.PeriodicParameterChangeTrigger">
+                    <period class="controlparameter.ConstantControlParameter" parameter="10"/>
+                </parameterChangeTrigger>
+
+                <parameterChangeReaction class="tuning.parameterchange.reactions.MinMaxParameterChangeReaction">
+                    <count class="controlparameter.ConstantControlParameter" parameter="50"/>
+                </parameterChangeReaction>
+            </iterationStrategy>
+
+            <parameterProvider class="tuning.parameterlist.SobolParameterListProvider">
+                <addParameterBounds class="tuning.parameters.TuningBounds" lowerBound="0.0" upperBound="1.0"/>
+                <addParameterBounds class="tuning.parameters.TuningBounds" lowerBound="0.0" upperBound="4.0"/>
+                <addParameterBounds class="tuning.parameters.TuningBounds" lowerBound="0.0" upperBound="4.0"/>
+                <count value="100"/>
+            </parameterProvider>
+        </algorithm>
+    </algorithms>
+
+    <problems>
+        <problem id="tuning" class="tuning.TuningProblem" domain="R(-5:5)^10">
+
+            <samples value="1"/>
+            <targetAlgorithm idref="pso"/>
+            <measurement class="measurement.single.Fitness"/>
+
+            <problemsProvider class="tuning.problem.MultiDimensionProblemGenerator">
+
+                <dimensionBounds class="tuning.parameters.TuningBounds" lowerBound="10" upperBound="50"/>
+
+                <problemsProvider class="tuning.problem.StandardProblemGenerator">
+
+                    <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^10">
+                        <function class="functions.discrete.LinearQueens"/>
+                        <objective class="problem.objective.Maximise" />
+                    </problem>
+                </problemsProvider>
+            </problemsProvider>
+        </problem>
+    </problems>
+
+    <measurements id="measurements" class="simulator.MeasurementSuite" resolution="1">
+        <addMeasurement class="measurement.multiple.MultipleSolutions"/>
+    </measurements>
+
+    <simulations>
+        <simulation samples="1">
+            <algorithm idref="frace2"/>
+            <problem idref="tuning"/>
+            <measurements idref="measurements" />
+            <output format="TXT" file="data/i_f-race.txt"/>
+        </simulation>
+
+		<simulation samples="1">
+            <algorithm idref="frace"/>
+            <problem idref="tuning"/>
+            <measurements idref="measurements" />
+            <output format="TXT" file="data/i_f-race.txt"/>
+        </simulation>
+    </simulations>
+</simulator>
