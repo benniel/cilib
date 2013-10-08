@@ -53,17 +53,28 @@
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
-            <problemsProvider class="tuning.problem.MultiDimensionProblemGenerator">
+            <problemsProvider class="tuning.problem.StandardProblemGenerator">
 
-                <dimensionBounds class="tuning.parameters.TuningBounds" lowerBound="10" upperBound="50"/>
+                <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^64">
+                    <function class="functions.discrete.LinearQueens" boardSize="8"/>
+                </problem>
 
-                <problemsProvider class="tuning.problem.StandardProblemGenerator">
+                <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^81">
+                    <function class="functions.discrete.LinearQueens" boardSize="9"/>
+                </problem>
 
-                    <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^10">
-                        <function class="functions.discrete.LinearQueens"/>
-                        <objective class="problem.objective.Maximise" />
-                    </problem>
-                </problemsProvider>
+                <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^100">
+                    <function class="functions.discrete.LinearQueens" boardSize="10"/>
+                </problem>
+
+
+                <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^121">
+                    <function class="functions.discrete.LinearQueens" boardSize="11"/>
+                </problem>
+
+                <problem id="nqueens" class="problem.FunctionOptimisationProblem" domain="B^144">
+                    <function class="functions.discrete.LinearQueens" boardSize="12"/>
+                </problem>
             </problemsProvider>
         </problem>
     </problems>

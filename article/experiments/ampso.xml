@@ -14,7 +14,7 @@
     <problems>
 	<problem id="AMRastrigin" class="problem.AngleModulationProblem" domain="R(-2:2)^4">
             <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
-		<delegate class="problem.FunctionOptimisationProblem" domain="R(-5.12:5.12)^30">
+		    <delegate class="problem.FunctionOptimisationProblem" domain="R(-5.12:5.12)^30">
                     <function class="functions.continuous.unconstrained.Rastrigin"/>
                 </delegate>
             </generatingFunction>
