@@ -9,7 +9,11 @@ package net.sourceforge.cilib.functions.continuous.unconstrained;
 import fj.data.List;
 import net.sourceforge.cilib.functions.ContinuousFunction;
 import net.sourceforge.cilib.functions.Gradient;
+
 import net.sourceforge.cilib.problem.solution.OptimisationSolution;
+
+import net.sourceforge.cilib.functions.NichingFunction;
+
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
@@ -19,7 +23,7 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * R(0, 1)^1
  *
  */
-public class EqualMinima extends ContinuousFunction implements Gradient {
+public class EqualMinima extends ContinuousFunction implements Gradient, NichingFunction {
 
     private static final long serialVersionUID = -5261002551096587662L;
 
@@ -78,4 +82,9 @@ public class EqualMinima extends ContinuousFunction implements Gradient {
         
         return vectorBuilder.build();
     }
+
+	@Override
+	public double getNicheRadius() {
+		return 0.01;
+	}
 }
