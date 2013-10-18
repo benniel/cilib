@@ -6,8 +6,10 @@
  */
 package net.sourceforge.cilib.functions.continuous.unconstrained;
 
+import fj.data.List;
 import net.sourceforge.cilib.functions.ContinuousFunction;
 import net.sourceforge.cilib.functions.Gradient;
+import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
