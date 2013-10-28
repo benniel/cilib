@@ -164,7 +164,7 @@ public class GCVelocityProvider implements VelocityProvider {
                 this.successCount = 0;
                 this.failureCount++;
             }
-
+            
             updateRho((Vector) particle.getCandidateSolution());
             return;
         }
@@ -184,15 +184,15 @@ public class GCVelocityProvider implements VelocityProvider {
         double average = (component.getUpperBound() - component.getLowerBound()) / this.rhoExpandCoefficient.getParameter();
 
         if (this.successCount >= this.successCountThreshold) {
-            tmp = this.rhoExpandCoefficient.getParameter() * this.rho.getParameter();
-        }
+                tmp = this.rhoExpandCoefficient.getParameter() * this.rho.getParameter();
+            }
         if (this.failureCount >= this.failureCountThreshold) {
-            tmp = this.rhoContractCoefficient.getParameter() * this.rho.getParameter();
-        }
+                tmp = this.rhoContractCoefficient.getParameter() * this.rho.getParameter();
+            }
 
-        if (tmp <= this.rhoLowerBound.getParameter()) {
-            tmp = this.rhoLowerBound.getParameter();
-        }
+            if (tmp <= this.rhoLowerBound.getParameter()) {
+                tmp = this.rhoLowerBound.getParameter();
+            }
         if (tmp >= average) {
             tmp = average;
         }
