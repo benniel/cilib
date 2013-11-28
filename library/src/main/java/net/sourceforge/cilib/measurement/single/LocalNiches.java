@@ -6,7 +6,9 @@
  */
 package net.sourceforge.cilib.measurement.single;
 
-import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
+import fj.Equal;
+import fj.F;
+import fj.F2;
 import net.sourceforge.cilib.algorithm.Algorithm;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
@@ -17,12 +19,16 @@ import net.sourceforge.cilib.measurement.Measurement;
 import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 import net.sourceforge.cilib.type.types.container.TypeList;
 import net.sourceforge.cilib.type.types.container.Vector;
-import net.sourceforge.cilib.util.distancemeasure.EuclideanDistanceMeasure;
 import net.sourceforge.cilib.util.functions.Algorithms;
-import fj.Equal;
-import fj.F;
 import fj.Ord;
+import fj.Ordering;
 import fj.data.List;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
+import net.sourceforge.cilib.functions.Gradient;
+import net.sourceforge.cilib.problem.FunctionOptimisationProblem;
+import net.sourceforge.cilib.problem.Problem;
+import net.sourceforge.cilib.type.types.Real;
+import net.sourceforge.cilib.util.distancemeasure.EuclideanDistanceMeasure;
 
 public class LocalNiches implements Measurement<TypeList> {
 
@@ -47,13 +53,32 @@ private ControlParameter nicheRadius = ConstantControlParameter.of(0.01);
             multi = (MultiPopulationBasedAlgorithm) algorithm;
         }
         
+        Problem prob = algorithm.getOptimisationProblem();
+        final GradientVectorLength gvl = new GradientVectorLength();
+        
         List<Vector> niches = merge(List.iterableList(multi.getPopulations())
-        		.map(Algorithms.<SinglePopulationBasedAlgorithm>getBestSolution()),
+                                    .sort(
+                                        Ord.ord(new F2<SinglePopulationBasedAlgorithm, SinglePopulationBasedAlgorithm, Ordering>() {
+                                            public Ordering f(SinglePopulationBasedAlgorithm a, SinglePopulationBasedAlgorithm b) {
+                                                    return Ordering.values()[-gvl.getValue(a).compareTo(gvl.getValue(b)) + 1];
+                                            }
+                                        }.curry()))
+                                    .map(Algorithms.<SinglePopulationBasedAlgorithm>getBestSolution()),
         		List.<Vector>nil());
                 
+        Problem d = algorithm.getOptimisationProblem();
+        FunctionOptimisationProblem fop = (FunctionOptimisationProblem)d;
+        Gradient df = (Gradient)fop.getFunction();
+        
+        //return Real.valueOf(df.GetGradientVectorLength((Vector)best.getPosition()));
+        
         TypeList tl = new TypeList();
         for (Vector element : niches) {
-        	tl.add(element);
+                TypeList tl2 = new TypeList();
+                tl2.add(Real.valueOf(df.GetGradientVectorLength(element)));
+                tl2.add(element);
+                tl2.add(Real.valueOf(0));
+                tl.add(tl2);
         }
         
         return tl; 
@@ -105,7 +130,7 @@ private ControlParameter nicheRadius = ConstantControlParameter.of(0.01);
         
         for (E e : s.getTopology()) {
             SinglePopulationBasedAlgorithm dummyPopulation = s.getClone();
-            dummyPopulation.setTopology(s.getNeighbourhood().f(s.getTopology(), e));
+            dummyPopulation.setTopology(List.list(e));
             m.addPopulationBasedAlgorithm(dummyPopulation);
         }
         
