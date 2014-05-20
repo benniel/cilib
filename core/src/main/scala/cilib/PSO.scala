@@ -70,7 +70,7 @@ object PSO {
     val newVel: RVar[Position[F, A]] = for {
       b <- (M.mem.get(x._1) - x._2).traverse(q => Dist.stdUniform.map(r => n.fromDouble(r * c1 * n.toDouble(q))))
       a <- (globalG.neighbour(coll, x._2) - x._2).traverse(q => Dist.stdUniform.map(r => n.fromDouble(r * c2 * n.toDouble(q))))
-      c <- coll.map(_.pos).reduceLeft((p1, p2) => (p1 + p2).pos) //calculate repulsion term
+      c <- RVar.point(coll.map(_.pos)reduceLeft(_ + _)) //calculate repulsion term
     } yield n.fromDouble(w) *: x._2 + b + a + c
 
     newVel.map(y => (V.step.set(x._1, y), x._2))
