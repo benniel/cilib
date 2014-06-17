@@ -84,7 +84,16 @@ object PSO {
     vel(coll, x).map(y => (V.step.set(x._1, acc + y._2), x._2))
   }
 
-  def stdPos[F[_]: Zip: Functor, A: Numeric, S](vel: StepSize[F, S, A])(x: (S, Position[F, A])): RVar[(S, Position[F, A])] =
+  def quantumPosition[F[_]: Zip: Functor: Foldable:Monad, A: Numeric, S](vel: StepSize[F, S, A])(globalG: Neighbour[F, A], coll: List[(S, Position[F, A])], x: (S, Position[F, A]), r: Double) : RVar[(S, Position[F, A])] =
+    for {
+      u <- Dist.uniform(0,1)
+      rand_x <- x._2.map(_ => Dist.gaussian(0,1)).sequence
+      x_sq <- rand_x.map(_ => _ * _)
+      sum <- x_sq.foldLeft(0)(_ + _)
+      point <- (r * math.pow(u, 1 / x._2.length) / math.sqrt(sum)) * rand_x
+    } yield globalG.neighbour(coll, x._2) + point
+
+  def stdPosition[F[_]: Zip: Functor, A: Numeric, S](vel: StepSize[F, S, A])(x: (S, Position[F, A])): RVar[(S, Position[F, A])] =
     RVar.point((x._1, x._2 + vel.step.get(x._1)))
 
   // Iterations are of the form: A => RVar[A], where A = (Mem[F,A], Position[F,A])
@@ -130,7 +139,7 @@ object Runner {
   }
 }
 
-object TestRun {
+/*object TestRun {
 
   import Runner._
   import PSO._
@@ -168,7 +177,7 @@ object TestRun {
 
   //val k: Int = syncIter[B, Pool[E]](dHPSO[E])
   val i = runner[B, Pool[E]](syncIter[B, Pool[E]](dHPSO[E]), RVar.point _, 10)(pool)(col2)
-}
+}*/
 
 
 /*
