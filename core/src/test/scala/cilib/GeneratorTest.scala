@@ -62,10 +62,10 @@ object GeneratorTest extends Properties("Distribution") {
       val expected = (1 to b).map(_ => n/b).toList
       val observed = a.groupBy(x => (x * b).toInt).toList.sortBy(_._1).map(x => x._2.length)
 
-      (expected zip observed).map {
+      (expected zip observed).padTo(b, (n/b, 0)).map {
         case (e, o) => {
           val dev = o - e
-          (dev * dev) / e
+          (dev * dev) / e.toDouble
         }
       }.sum < 27.83 && a.forall(x => x >= 0 && x < 1.0)
     }
