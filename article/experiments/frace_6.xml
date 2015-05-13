@@ -20,20 +20,20 @@
         </algorithm>
 
         <algorithm id="frace" class="tuning.TuningAlgorithm">
-            <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="100"/>
+            <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="300"/>
 
             <iterationStrategy class="tuning.IFRaceIterationStrategy">
                 <iterationStrategy class="tuning.FRaceIterationStrategy">
-                    <minProblems class="controlparameter.ConstantControlParameter" parameter="5"/>
+                    <minProblems class="controlparameter.ConstantControlParameter" parameter="25"/>
                     <minSolutions class="controlparameter.ConstantControlParameter" parameter="2"/>
                 </iterationStrategy>
 
                 <parameterChangeTrigger class="tuning.parameterchange.triggers.PeriodicParameterChangeTrigger">
-                    <period class="controlparameter.ConstantControlParameter" parameter="10"/>
+                    <period class="controlparameter.ConstantControlParameter" parameter="30"/>
                 </parameterChangeTrigger>
 
                 <parameterChangeReaction class="tuning.parameterchange.reactions.MinMaxParameterChangeReaction">
-                    <count class="controlparameter.ConstantControlParameter" parameter="100"/>
+                    <count class="controlparameter.ConstantControlParameter" parameter="50"/>
                 </parameterChangeReaction>
             </iterationStrategy>
 
@@ -49,7 +49,7 @@
     <problems>
         <problem id="n-queens" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
@@ -99,7 +99,7 @@
 
         <problem id="knights-coverage" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
@@ -149,12 +149,13 @@
 
         <problem id="r-knights-tour" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
             <problemsProvider class="tuning.problem.StandardProblemGenerator">
                 <addProblem id="AM-r-knights-tour64" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^48">
                             <objective class="problem.objective.Maximise" />
@@ -164,6 +165,7 @@
 	            </addProblem>
 
                 <addProblem id="AM-r-knights-tour81" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^75">
                             <objective class="problem.objective.Maximise" />
@@ -173,6 +175,7 @@
 	            </addProblem>
 
                 <addProblem id="AM-r-knights-tour100" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^108">
                             <objective class="problem.objective.Maximise" />
@@ -182,6 +185,7 @@
 	            </addProblem>
 
                 <addProblem id="AM-r-knights-tour121" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^147">
                             <objective class="problem.objective.Maximise" />
@@ -191,6 +195,7 @@
 	            </addProblem>
 
                 <addProblem id="AM-r-knights-tour144" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^192">
                             <objective class="problem.objective.Maximise" />
@@ -204,12 +209,13 @@
 
         <problem id="O3-deceptive" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
             <problemsProvider class="tuning.problem.StandardProblemGenerator">
                 <addProblem id="Order3Deceptive30" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^30">
                             <objective class="problem.objective.Maximise" />
@@ -219,6 +225,7 @@
 	            </addProblem>
 
                 <addProblem id="Order3Deceptive45" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^45">
                             <objective class="problem.objective.Maximise" />
@@ -228,6 +235,7 @@
 	            </addProblem>
 
                 <addProblem id="Order3Deceptive60" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^60">
                             <objective class="problem.objective.Maximise" />
@@ -237,6 +245,7 @@
 	            </addProblem>
 
                 <addProblem id="Order3Deceptive75" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^75">
                             <objective class="problem.objective.Maximise" />
@@ -246,6 +255,7 @@
 	            </addProblem>
 
                 <addProblem id="Order3Deceptive90" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^90">
                             <objective class="problem.objective.Maximise" />
@@ -258,12 +268,13 @@
 
         <problem id="O5-deceptive" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
             <problemsProvider class="tuning.problem.StandardProblemGenerator">
                 <addProblem id="Order5Deceptive30" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^30">
                             <objective class="problem.objective.Maximise" />
@@ -273,6 +284,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive45" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^45">
                             <objective class="problem.objective.Maximise" />
@@ -282,6 +294,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive60" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^60">
                             <objective class="problem.objective.Maximise" />
@@ -291,6 +304,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive75" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^75">
                             <objective class="problem.objective.Maximise" />
@@ -300,6 +314,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive90" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^90">
                             <objective class="problem.objective.Maximise" />
@@ -312,12 +327,13 @@
 
         <problem id="one-max" class="tuning.TuningProblem" domain="R(-5:5)^10">
 
-            <samples value="10"/>
+            <samples value="1"/>
             <targetAlgorithm idref="pso"/>
             <measurement class="measurement.single.Fitness"/>
 
             <problemsProvider class="tuning.problem.StandardProblemGenerator">
                 <addProblem id="Order5Deceptive30" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^30">
                             <objective class="problem.objective.Maximise" />
@@ -327,6 +343,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive45" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^45">
                             <objective class="problem.objective.Maximise" />
@@ -336,6 +353,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive60" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^60">
                             <objective class="problem.objective.Maximise" />
@@ -345,6 +363,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive75" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^75">
                             <objective class="problem.objective.Maximise" />
@@ -354,6 +373,7 @@
 	            </addProblem>
 
                 <addProblem id="Order5Deceptive90" class="problem.AngleModulationProblem" domain="R(0:1)^4">
+                    <objective class="problem.objective.Maximise" />
                     <generatingFunction class="functions.continuous.am.AMBitGeneratingFunction" precision="2">
 		                <delegate class="problem.FunctionOptimisationProblem" domain="B^90">
                             <objective class="problem.objective.Maximise" />
@@ -369,7 +389,7 @@
         <addMeasurement class="measurement.multiple.MultipleSolutions"/>
     </measurements>
 
-    <simulations><!--
+    <simulations>
 		<simulation samples="1">
             <algorithm idref="frace"/>
             <problem idref="n-queens"/>
@@ -404,7 +424,7 @@
             <measurements idref="measurements" />
             <output format="TXT" file="data/frace_AMPSO_order5-deceptive.txt"/>
         </simulation>
--->
+
 		<simulation samples="1">
             <algorithm idref="frace"/>
             <problem idref="one-max"/>

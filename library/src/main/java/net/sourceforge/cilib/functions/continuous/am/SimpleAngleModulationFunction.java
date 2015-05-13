@@ -13,13 +13,17 @@ import net.sourceforge.cilib.type.types.container.Vector;
 /**
  * The standard modulation function used in angle modulation problems.
  */
-public class SinfxAngleModulationFunction1 extends ContinuousFunction {
+public class SimpleAngleModulationFunction extends ContinuousFunction implements ModulationFunction {
     public Double f(Vector input) {
-        Preconditions.checkState(input.size() == 2, "This function is only defined for one dimension.");
+        Preconditions.checkState(input.size() == 2, "This function is only defined for two dimensions.");
         
         double x = input.doubleValueOf(0);
-        double f = input.doubleValueOf(1);
+        double v = input.doubleValueOf(1);
         
-        return Math.sin(f * x);
+        return Math.sin(v*(x+1));
+    }
+
+    public int coefficients() {
+        return 1;
     }
 }

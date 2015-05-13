@@ -15,8 +15,8 @@ import net.sourceforge.cilib.type.types.container.Vector;
 public class KnightsTour extends DiscreteFunction {
 
     private static final long serialVersionUID = -4448832121042323303L;
-    private static final int[] MOVE_X = {-2, -1, 1, 2, 2, 1, -1, -2};
-    private static final int[] MOVE_Y = {-1, -2, -2, -1, 1, 2, -2, -1};
+    private static final int[] MOVE_X = {-2, -1,  1,  2, 2, 1, -1, -2};
+    private static final int[] MOVE_Y = {-1, -2, -2, -1, 1, 2,  2,  1};
     private int boardSize;
     private final int startRow = 0;
     private final int startCol = 0;

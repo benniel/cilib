@@ -8,3 +8,8 @@ private.sbt
 .classpath
 .cache
 .project
+Ants*
+article*
+present*
+Genreating*
+literature*

@@ -23,7 +23,7 @@ public class AMBitGeneratingFunction extends F<Vector, String> {
     protected FunctionOptimisationProblem delegate;
     protected ContinuousFunction modulationFunction;
     protected SamplingStrategy sampler;
-    protected int bitsPerDimension, precision;
+    protected int bitsPerDimension, precision, generatingFunctions;
 
     public AMBitGeneratingFunction() {
         this.modulationFunction = new StandardAngleModulationFunction();
@@ -32,13 +32,25 @@ public class AMBitGeneratingFunction extends F<Vector, String> {
         this.precision = 3;
     }
     
+    public AMBitGeneratingFunction(AMBitGeneratingFunction copy) {
+        this.modulationFunction = copy.modulationFunction;
+        this.sampler = copy.sampler;
+        this.bitsPerDimension = copy.bitsPerDimension;
+        this.precision = copy.precision;
+        this.generatingFunctions = copy.generatingFunctions;
+    }
+    
+    public AMBitGeneratingFunction getClone() {
+        return new AMBitGeneratingFunction(this);
+    }
+    
     @Override
     public String f(Vector input) {
         StringBuilder str = new StringBuilder();
-        
-        int bits = bitsPerDimension * delegate.getDomain().getDimension();
+        int bits = (int) Math.ceil((double)bitsPerDimension * delegate.getDomain().getDimension() / (double)generatingFunctions);
+//        System.out.println("bits: " + bits);
         Array samplePoints = sampler.getSamplePoints(bits, input);
-        
+         
         Array<Double> sampleValues = samplePoints.map(modulationFunction);
 
         for (Double d : sampleValues) {
@@ -79,6 +91,10 @@ public class AMBitGeneratingFunction extends F<Vector, String> {
 
     public int getBitsPerDimension() {
         return bitsPerDimension;
+    }
+    
+    public void setGeneratingFunctions(int g) {
+        this.generatingFunctions = g;
     }
     
     /**

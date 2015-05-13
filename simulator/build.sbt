@@ -28,3 +28,5 @@ autoScalaLibrary := false
 
 resourceDirectory in Test <<= baseDirectory { _ / "simulator" }
 
+
+seq(netbeans.NetbeansTasks.netbeansSettings:_*)

@@ -35,6 +35,10 @@ public class MinMaxAngleModulationProblem extends AngleModulationProblem {
     public void setDelegate(AngleModulationProblem delegate) {
         this.delegate = delegate;
     }
+
+    public AngleModulationProblem getDelegate() {
+        return delegate;
+    }
     
     @Override
     public DomainRegistry getDomain() {
@@ -44,23 +48,56 @@ public class MinMaxAngleModulationProblem extends AngleModulationProblem {
         
         return domain;
     }
+    
+    public Vector getBinarySolution(Type solution) {
+        delegate.getGeneratingFunction().setGeneratingFunctions(generatingFunctions);
+        
+        Vector solutionVector = (Vector) solution;
+        StringBuilder sb = new StringBuilder();
+        int coefficients = (solutionVector.size() / generatingFunctions) - 2;
+        
+        for (int g = 0; g < generatingFunctions; g++) {
+            Vector.Builder vb = Vector.newBuilder();
+            int start = g * coefficients;
+            
+            for (int b = start; b < start + coefficients + 2; b++) {
+                vb.add(solutionVector.doubleValueOf(b));
+            }
+            
+            Vector currentGf = vb.build();
+            
+            Double[] partialSolution = new Double[currentGf.size() - 2];
+            for (int i = 0; i < partialSolution.length; i++) {
+                partialSolution[i] = currentGf.doubleValueOf(i);
+            }
+            
+            double min = currentGf.doubleValueOf(currentGf.size() - 2);
+            double max = currentGf.doubleValueOf(currentGf.size() - 1);
+            
+            delegate.getGeneratingFunction().setSampler(new MinMaxAMSamplingStrategy(min, max));
+            
+            sb.append(delegate.getGeneratingFunction().f(Vector.of(partialSolution)));
+        }
+        
+        String bitString = sb.toString();
+        
+//        Double[] partialSolution = new Double[solutionVector.size() - 2];
+//        for (int i = 0; i < partialSolution.length; i++) {
+//            partialSolution[i] = solutionVector.doubleValueOf(i);
+//        }
+//        
+//        double min = solutionVector.doubleValueOf(solutionVector.size() - 2);
+//        double max = solutionVector.doubleValueOf(solutionVector.size() - 1);
+//        
+//        delegate.getGeneratingFunction().setSampler(new MinMaxAMSamplingStrategy(min, max));
+//        
+//        String bitString = delegate.getGeneratingFunction().f(Vector.of(partialSolution));
+        return delegate.decodeBitString(bitString, delegate.getGeneratingFunction().getBitsPerDimension());
+    }
 
     @Override
     protected Fitness calculateFitness(Type solution) {
-        Vector solutionVector = (Vector) solution;
-        
-        Double[] partialSolution = new Double[solutionVector.size() - 2];
-        for (int i = 0; i < partialSolution.length; i++) {
-            partialSolution[i] = solutionVector.doubleValueOf(i);
-        }
-        
-        double min = solutionVector.doubleValueOf(solutionVector.size() - 2);
-        double max = solutionVector.doubleValueOf(solutionVector.size() - 1);
-        
-        delegate.getGeneratingFunction().setSampler(new MinMaxAMSamplingStrategy(min, max));
-        
-        String bitString = delegate.getGeneratingFunction().f(Vector.of(partialSolution));
-        Vector expandedVector = delegate.decodeBitString(bitString, delegate.getGeneratingFunction().getBitsPerDimension());
-        return delegate.getGeneratingFunction().getDelegate().getFitness(expandedVector);
+
+        return delegate.getGeneratingFunction().getDelegate().getFitness(getBinarySolution(solution));
     }
 }

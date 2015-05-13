@@ -13,7 +13,7 @@ import net.sourceforge.cilib.type.types.container.Vector;
 /**
  * The standard modulation function used in angle modulation problems.
  */
-public class StandardAngleModulationFunction extends ContinuousFunction {
+public class StandardAngleModulationFunction extends ContinuousFunction implements ModulationFunction {
     public Double f(Vector input) {
         Preconditions.checkState(input.size() == 5, "This function is only defined for five dimensions.");
         
@@ -24,5 +24,9 @@ public class StandardAngleModulationFunction extends ContinuousFunction {
         double d = input.doubleValueOf(4);
         
         return Math.sin(2 * Math.PI * (x - a) * b * Math.cos(2 * Math.PI * c * (x - a))) + d;
+    }
+
+    public int coefficients() {
+        return 4;
     }
 }

@@ -83,3 +83,5 @@ pomExtra := (
   }
 </developers>)
 
+
+seq(netbeans.NetbeansTasks.netbeansSettings:_*)

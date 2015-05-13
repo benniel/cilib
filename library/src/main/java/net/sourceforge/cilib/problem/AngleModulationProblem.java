@@ -9,6 +9,7 @@ package net.sourceforge.cilib.problem;
 import net.sourceforge.cilib.functions.continuous.am.AMBitGeneratingFunction;
 import net.sourceforge.cilib.problem.solution.Fitness;
 import net.sourceforge.cilib.type.StringBasedDomainRegistry;
+import net.sourceforge.cilib.type.types.Numeric;
 import net.sourceforge.cilib.type.types.Type;
 import net.sourceforge.cilib.type.types.container.Vector;
 
@@ -18,16 +19,19 @@ import net.sourceforge.cilib.type.types.container.Vector;
 public class AngleModulationProblem extends AbstractProblem {
     private static final long serialVersionUID = -3492262439415251355L;
     private AMBitGeneratingFunction generatingFunction;
+    protected int generatingFunctions;
 
     public AngleModulationProblem() {
         domainRegistry = new StringBasedDomainRegistry();
         domainRegistry.setDomainString("R(-1.0:1.0)^4");
         this.generatingFunction = new AMBitGeneratingFunction();
+        this.generatingFunctions = 1;
     }
 
     public AngleModulationProblem(AngleModulationProblem copy) {
-        this.generatingFunction = copy.generatingFunction;
+        this.generatingFunction = copy.generatingFunction.getClone();
         this.domainRegistry = copy.domainRegistry.getClone();
+        this.generatingFunctions = copy.generatingFunctions;
     }
 
     /**
@@ -106,7 +110,7 @@ public class AngleModulationProblem extends AbstractProblem {
         StringBuilder builder = new StringBuilder();
         Vector bounds = (Vector) this.domainRegistry.getBuiltRepresentation();
         double lowerBound = bounds.boundsOf(0).getLowerBound();
-        double upperBound = bounds.boundsOf(1).getUpperBound();
+        double upperBound = bounds.boundsOf(0).getUpperBound();
         int dimensions = domainRegistry.getDimension();
         
         builder.append("R(");
@@ -118,15 +122,56 @@ public class AngleModulationProblem extends AbstractProblem {
         
         domainRegistry.setDomainString(builder.toString());
     }
+
+    public void setGeneratingFunctions(int generatingFunctions) {
+        this.generatingFunctions = generatingFunctions;
+    }
     
     public AMBitGeneratingFunction getGeneratingFunction() {
         return generatingFunction;
     }
+    
+    public Vector getBinarySolution(Type solution) {
+//        System.out.print("\ninput: ");
+//        for (Numeric n : (Vector)solution) {
+//            System.out.print(n.doubleValue() + " ");
+//        }
+//        System.out.println("\nfunctions: " + generatingFunctions);
+        
+        generatingFunction.setGeneratingFunctions(generatingFunctions);
+        StringBuilder sb = new StringBuilder();
+        int coefficients = ((Vector)solution).size() / generatingFunctions;
+        
+//        System.out.println("coefficients: " + coefficients);
+        
+        for (int g = 0; g < generatingFunctions; g++) {
+            Vector.Builder vb = Vector.newBuilder();
+            int start = g * coefficients;
+//            System.out.println("\nstart: " + start);
+            for (int b = start; b < start + coefficients; b++) {
+                vb.add(((Vector)solution).doubleValueOf(b));
+            }
+            
+//            System.out.println("vector: " + vb.build());
+            
+            sb.append(generatingFunction.f(vb.build()));
+            
+//            System.out.println("g" + g + ": " + sb.toString() + "(" + sb.toString().length() + ")");
+        }
+        String bitString = sb.toString();
+        
+//        System.out.println("bitstring: " + bitString);
+        
+        return decodeBitString(bitString, generatingFunction.getBitsPerDimension());
+    }
 
     @Override
     protected Fitness calculateFitness(Type solution) {
-        String bitString = generatingFunction.f((Vector) solution);
-        Vector expandedVector = decodeBitString(bitString, generatingFunction.getBitsPerDimension());
-        return generatingFunction.getDelegate().getFitness(expandedVector);
+
+        
+//        System.out.println("expandedv: " + expandedVector);
+//        System.out.println("fitness: " + generatingFunction.getDelegate().getFitness(expandedVector).getValue());
+//        System.exit(1);
+        return generatingFunction.getDelegate().getFitness(getBinarySolution(solution));
     }
 }

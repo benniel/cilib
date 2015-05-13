@@ -6,7 +6,9 @@
  */
 package net.sourceforge.cilib.functions.discrete;
 
+import net.sourceforge.cilib.functions.ContinuousFunction;
 import net.sourceforge.cilib.functions.DiscreteFunction;
+import net.sourceforge.cilib.type.types.Numeric;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
@@ -16,14 +18,14 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * The problem....
  *
  */
-public class KnightsCoverage extends DiscreteFunction {
+public class NewKnightsCoverage extends ContinuousFunction {
 
     private static final long serialVersionUID = -8039165934381145252L;
     private final int[] movesX = { 1,  2, 2, 1, -1, -2, -2, -1};
     private final int[] movesY = {-2, -1, 1, 2,  2,  1, -1, -2};
     private int boardSize;
 
-    public KnightsCoverage() {
+    public NewKnightsCoverage() {
         this.boardSize = 8;
 //        setDomain("B^" + boardSize * boardSize);
     }
@@ -32,9 +34,9 @@ public class KnightsCoverage extends DiscreteFunction {
      * {@inheritDoc}
      */
     @Override
-    public Integer f(Vector input) {
+    public Double f(Vector input) {
         int[][] board = new int[boardSize][boardSize];
-
+        
         // Place the knights (represented by a -1)
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -54,19 +56,36 @@ public class KnightsCoverage extends DiscreteFunction {
         }
 
         // Sum up for the fitness value
-        int fitness = 0;
+        //int fitness = 0;
+        int knights = 0;
+        int covered = 0;
+        int uncovered = 0;
 
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                if (board[i][j] == -1) {// covered square by knight
-                    fitness += 100;
-                } else if (board[i][j] == 0) { // not covered by a knight at all
-                    fitness += 1000;
+                if (board[i][j] == -1) {// covered by knight
+                    knights++;
+                } else if (board[i][j] == 1) { // covered
+                    covered++;
                 } else {
-                    fitness -= 200; // square is covered
+                    uncovered++;
                 }
             }
         }
+        
+        double fitness = ((double)knights / ((double)covered + 1)) + ((double)uncovered / ((double)knights + 1));
+        
+//        double total = 0.0;
+//        for (Numeric n : input) {
+//            total += n.doubleValue();
+//        }
+//        if (total == 0.0) {
+//            System.out.println("covered: " + covered);
+//            System.out.println("uncovered: " + uncovered);
+//            System.out.println("knights: " + knights);
+//            System.out.println("dimensions: " + input.size());
+//            System.out.println("fitness: " + fitness);
+//        }
 
         return fitness;
     }
@@ -79,7 +98,7 @@ public class KnightsCoverage extends DiscreteFunction {
 
             if ((moveX >= 0 && moveX < boardSize) && (moveY >= 0 && moveY < boardSize)) {
                 if (board[moveX][moveY] != -1) {
-                    board[moveX][moveY]++;
+                    board[moveX][moveY] = 1;
                 }
             }
         }

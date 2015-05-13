@@ -95,8 +95,8 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
                 thisPeak += Math.pow(input.doubleValueOf(i) - peakPositions[p].doubleValueOf(i), 2);
             }
 
-            thisPeak = 1 + (peakWidths[p] * thisPeak);
-            thisPeak = peakHeigths[p] / thisPeak;
+            //thisPeak = 1 + (peakWidths[p] * thisPeak);
+            thisPeak = peakHeigths[p] / (1 + (peakWidths[p] * thisPeak));
 
             if (thisPeak > maximum) {
                 maximum = thisPeak;
@@ -201,6 +201,7 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
         for (int p = 0; p < peaks; p++) {
             for (int i = 0; i < dimensions; i++) {
                 position[i] = uniform.getRandomNumber(lower, upper);
+                //position[i] = 0.0;
                 movementDirections[p][i] = 1;
             }
 
@@ -209,6 +210,8 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
             peakWidths[p] = uniform.getRandomNumber(minWidth, maxWidth);
 
             shiftVectors[p] = Vector.of(oneVector);
+            
+            //System.out.println(p + ": " + peakPositions[p]);
         }
     }
 
